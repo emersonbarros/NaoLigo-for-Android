@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hello">Não Ligo</string>
+    <string name="app_name">Não Ligo</string>
+    <string name="email">E-mail</string>
+    <string name="password">Senha</string>
+    <string name="login">Entrar</string>
+    <string name="url">http://www.naoligo.com.br</string>
+    <string name="ddd">DDD</string>
+    <string name="phone">Telefone</string>
+    <string name="message">Mensagem</string>
+    <string name="send">Enviar</string>
+    <string name="cancel">Sair</string>
+    <string name="sending">Enviando...</string>
+    <string name="logining">Autenticando...</string>
+    <string name="close">Sair</string>
+    <string name="back">Voltar</string>
+</resources>
