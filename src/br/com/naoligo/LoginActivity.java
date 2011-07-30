@@ -11,15 +11,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.provider.ContactsContract;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
 public class LoginActivity extends Activity {
-
-	private static final int CONTACT_PICKER_RESULT = 1001;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -45,18 +41,14 @@ public class LoginActivity extends Activity {
 
 		btClose.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				/*
-				 * SharedPreferences settings = getSharedPreferences(
-				 * Contants.PREFS_NAME, 0); SharedPreferences.Editor editor =
-				 * settings.edit(); editor.putString("email", "");
-				 * editor.putString("password", ""); editor.commit();
-				 * setResult(RESULT_OK); finish();
-				 */
-
-				Intent contactPickerIntent = new Intent(Intent.ACTION_PICK,
-						ContactsContract.Contacts.CONTENT_URI);
-				startActivityForResult(contactPickerIntent,
-						CONTACT_PICKER_RESULT);
+				SharedPreferences settings = getSharedPreferences(
+						Contants.PREFS_NAME, 0);
+				SharedPreferences.Editor editor = settings.edit();
+				editor.putString("email", "");
+				editor.putString("password", "");
+				editor.commit();
+				setResult(RESULT_OK);
+				finish();
 			}
 		});
 
@@ -107,20 +99,6 @@ public class LoginActivity extends Activity {
 				}
 			}
 		});
-	}
-
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (resultCode == RESULT_OK) {
-			switch (requestCode) {
-			case CONTACT_PICKER_RESULT:
-				// handle contact results
-				break;
-			}
-
-		} else {
-			// gracefully handle failure
-			Log.w("DEBUG_TAG", "Warning: activity result not ok");
-		}
 	}
 
 	private void showDialog(String message) {

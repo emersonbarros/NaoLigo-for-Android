@@ -15,4 +15,5 @@
     <string name="logining">Autenticando...</string>
     <string name="close">Sair</string>
     <string name="back">Voltar</string>
+    <string name="blank"></string>
 </resources>
