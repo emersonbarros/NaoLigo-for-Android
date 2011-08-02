@@ -1,5 +1,7 @@
 package br.com.naoligo;
 
+import java.io.IOException;
+
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
@@ -51,9 +53,12 @@ public class NaoLigoActivity extends Activity {
 				EditText editmessage = (EditText) findViewById(R.id.editMessage);
 
 				String tmp = unformatPhone(editphone.getText().toString());
-				String ddd = tmp.substring(0, 2);
-				String phone = tmp.substring(2, tmp.length());
-
+				String ddd = "11";
+				String phone = tmp;
+				if (tmp.length() > 2) {
+					ddd = tmp.substring(0, 2);
+					phone = tmp.substring(2, tmp.length());
+				}
 				request.addProperty("email", email);
 				request.addProperty("senha", password);
 				request.addProperty("ddd", ddd);
@@ -74,6 +79,8 @@ public class NaoLigoActivity extends Activity {
 					String resultsRequestSOAP = (String) envelope.getResponse();
 
 					showDialog(resultsRequestSOAP);
+				} catch (IOException e) {
+					showDialog("Serviço temporariamente indisponível");
 				} catch (Exception e) {
 					showDialog(e.getMessage());
 				} finally {
@@ -148,13 +155,13 @@ public class NaoLigoActivity extends Activity {
 
 				String ddd = "11";
 				if (phoneNumber.length() == 13) {
-					ddd = phoneNumber.substring(4, 2);
+					ddd = phoneNumber.substring(2, 4);
 					phoneNumber = phoneNumber
-							.substring(6, phoneNumber.length());
+							.substring(4, phoneNumber.length());
 				} else if (phoneNumber.length() == 12) {
-					ddd = phoneNumber.substring(4, 2);
+					ddd = phoneNumber.substring(2, 4);
 					phoneNumber = phoneNumber
-							.substring(6, phoneNumber.length());
+							.substring(4, phoneNumber.length());
 				} else if (phoneNumber.length() == 10
 						|| phoneNumber.length() == 11) {
 					ddd = phoneNumber.substring(0, 2);

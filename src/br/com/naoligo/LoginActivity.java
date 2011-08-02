@@ -1,5 +1,7 @@
 package br.com.naoligo;
 
+import java.io.IOException;
+
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
@@ -91,6 +93,8 @@ public class LoginActivity extends Activity {
 					} else {
 						showDialog(resultsRequestSOAP);
 					}
+				} catch (IOException e) {
+					showDialog("Serviço temporariamente indisponível");
 				} catch (Exception e) {
 					showDialog(e.getMessage());
 				} finally {
