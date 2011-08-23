@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+	<PreferenceCategory android:title="Second Category"
+		android:key="second_category">
+
+		<EditTextPreference android:key="ddd"
+			android:title="DDD" android:summary="Define o código de área"
+			android:dialogTitle="DDD" android:dialogMessage="Provide a message"
+			android:defaultValue="11" />
+			
+		<Preference android:title="Custom Preference"
+			android:summary="This works almost like a button" android:key="customPref" />
+		<ListPreference></ListPreference>
+	</PreferenceCategory>
+
+</PreferenceScreen>

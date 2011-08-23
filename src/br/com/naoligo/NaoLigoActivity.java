@@ -1,53 +1,47 @@
 package br.com.naoligo;
 
-import java.io.IOException;
-
-import org.ksoap2.SoapEnvelope;
-import org.ksoap2.serialization.SoapObject;
-import org.ksoap2.serialization.SoapSerializationEnvelope;
-import org.ksoap2.transport.HttpTransportSE;
-
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
-public class NaoLigoActivity extends Activity {
+public class NaoLigoActivity extends BaseActivity {
 
 	private static final int CONTACT_PICKER_RESULT = 1001;
 
+
+	private NaoLigoActivity naoLigoActivity = null;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-
-		SharedPreferences settings = getSharedPreferences(Contants.PREFS_NAME,
-				0);
-		final String email = settings.getString("email", "");
-		final String password = settings.getString("password", "");
-
+		naoLigoActivity = this;
+		
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.main);
 
 		final Button btSend = (Button) findViewById(R.id.btnSend);
-		final Button btCancel = (Button) findViewById(R.id.btnCancel);
 		final ImageButton btSelectContact = (ImageButton) findViewById(R.id.btnSelectContact);
+
+		SharedPreferences settings = getSharedPreferences(Contants.PREFS_NAME, 0);
+		final String email = settings.getString("email", "");
+		final String password = settings.getString("password", "");
+
+		if ("".equals(email) || "".equals(password)) {
+			Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+			startActivity(intent);
+		}
 
 		btSend.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				btSend.setText(getString(R.string.sending));
-				btSend.setEnabled(false);
-
-				SoapObject request = new SoapObject(Contants.NAMESPACE,
-						Contants.METHOD_NAME_SEND_SMS);
 
 				EditText editphone = (EditText) findViewById(R.id.editPhone);
 				EditText editmessage = (EditText) findViewById(R.id.editMessage);
@@ -59,73 +53,41 @@ public class NaoLigoActivity extends Activity {
 					ddd = tmp.substring(0, 2);
 					phone = tmp.substring(2, tmp.length());
 				}
-				request.addProperty("email", email);
-				request.addProperty("senha", password);
-				request.addProperty("ddd", ddd);
-				request.addProperty("telefone", phone);
-				request.addProperty("texto", editmessage.getText().toString());
+				String[][] params = { { "email", email }, { "senha", password }, { "ddd", ddd }, { "telefone", phone },
+						{ "texto", editmessage.getText().toString() } };
 
-				SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(
-						SoapEnvelope.VER11);
+				CallWebServiceTask task = new CallWebServiceTask(naoLigoActivity, Contants.METHOD_NAME_SEND_SMS);
+				task.execute(params);
 
-				envelope.setOutputSoapObject(request);
-				HttpTransportSE androidHttpTransport = new HttpTransportSE(
-						Contants.URL);
-
-				try {
-					androidHttpTransport.call(Contants.SOAP_ACTION_SEND_SMS,
-							envelope);
-
-					String resultsRequestSOAP = (String) envelope.getResponse();
-
-					showDialog(resultsRequestSOAP);
-				} catch (IOException e) {
-					showDialog("Serviço temporariamente indisponível");
-				} catch (Exception e) {
-					showDialog(e.getMessage());
-				} finally {
-					btSend.setText(getString(R.string.send));
-					btSend.setEnabled(true);
-				}
 			}
 		});
 
 		btSelectContact.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				Intent contactPickerIntent = new Intent(Intent.ACTION_PICK,
-						ContactsContract.Contacts.CONTENT_URI);
-				contactPickerIntent
-						.setType(ContactsContract.CommonDataKinds.Phone.CONTENT_TYPE);
-				startActivityForResult(contactPickerIntent,
-						CONTACT_PICKER_RESULT);
-			}
-		});
-
-		btCancel.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				setResult(RESULT_OK);
-				finish();
+				Intent contactPickerIntent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+				contactPickerIntent.setType(ContactsContract.CommonDataKinds.Phone.CONTENT_TYPE);
+				startActivityForResult(contactPickerIntent, CONTACT_PICKER_RESULT);
 			}
 		});
 	}
 
-	protected void onActivityResult(int requestCode, int resultCode,
-			Intent intent) {
+	protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
 		if (resultCode == RESULT_OK) {
 			switch (requestCode) {
 			case CONTACT_PICKER_RESULT:
-				Cursor cursor = managedQuery(intent.getData(), null, null,
-						null, null);
-				while (cursor.moveToNext()) {
-					String phoneNumber = cursor
-							.getString(cursor
-									.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+				try {
+					Cursor cursor = managedQuery(intent.getData(), null, null, null, null);
+					while (cursor.moveToNext()) {
+						String phoneNumber = cursor.getString(cursor
+								.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
 
-					EditText editphone = (EditText) findViewById(R.id.editPhone);
-					editphone.setText(formatPhone(phoneNumber));
-					break;
+						EditText editphone = (EditText) findViewById(R.id.editPhone);
+						editphone.setText(formatPhone(phoneNumber));
+						break;
+					}
+					cursor.close();
+				} catch (Exception e) {
 				}
-				cursor.close();
 			}
 		} else {
 			// gracefully handle failure
@@ -135,7 +97,9 @@ public class NaoLigoActivity extends Activity {
 
 	private String unformatPhone(String phoneNumber) {
 		if (phoneNumber != null) {
-			phoneNumber = phoneNumber.replaceAll("\\+55", "");
+			while (phoneNumber.indexOf("+") > -1) {
+				phoneNumber = phoneNumber.replace("+55", "");
+			}
 			if (phoneNumber.startsWith("0")) {
 				phoneNumber = phoneNumber.replaceFirst("0", "");
 			}
@@ -156,24 +120,17 @@ public class NaoLigoActivity extends Activity {
 				String ddd = "11";
 				if (phoneNumber.length() == 13) {
 					ddd = phoneNumber.substring(2, 4);
-					phoneNumber = phoneNumber
-							.substring(4, phoneNumber.length());
+					phoneNumber = phoneNumber.substring(4, phoneNumber.length());
 				} else if (phoneNumber.length() == 12) {
 					ddd = phoneNumber.substring(2, 4);
-					phoneNumber = phoneNumber
-							.substring(4, phoneNumber.length());
-				} else if (phoneNumber.length() == 10
-						|| phoneNumber.length() == 11) {
+					phoneNumber = phoneNumber.substring(4, phoneNumber.length());
+				} else if (phoneNumber.length() == 10 || phoneNumber.length() == 11) {
 					ddd = phoneNumber.substring(0, 2);
-					phoneNumber = phoneNumber
-							.substring(2, phoneNumber.length());
+					phoneNumber = phoneNumber.substring(2, phoneNumber.length());
 				}
 
-				phoneNumber = phoneNumber
-						.substring(0, phoneNumber.length() - 4)
-						+ "-"
-						+ phoneNumber.substring(phoneNumber.length() - 4,
-								phoneNumber.length());
+				phoneNumber = phoneNumber.substring(0, phoneNumber.length() - 4) + "-"
+						+ phoneNumber.substring(phoneNumber.length() - 4, phoneNumber.length());
 				phoneNumber = "(" + ddd + ") " + phoneNumber;
 			} catch (Exception e) {
 			}
@@ -181,17 +138,48 @@ public class NaoLigoActivity extends Activity {
 		return phoneNumber;
 	}
 
-	private void showDialog(String message) {
-		final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-		alertDialog.setTitle(getString(R.string.app_name));
-		alertDialog.setMessage(message);
-		alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int which) {
-				alertDialog.hide();
-			}
-		});
-		alertDialog.setIcon(R.drawable.icon);
-		alertDialog.show();
+	private final int INFORMATION = 0;
+	private final int PREFERENCES = 1;
+	private final int LOGOUT = 2;
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		super.onCreateOptionsMenu(menu);
+
+		// Create and add new menu items.
+		//MenuItem itemInformation = menu.add(0, INFORMATION, Menu.NONE, R.string.information);
+		//MenuItem itemPreferences = menu.add(0, PREFERENCES, Menu.NONE, R.string.preferences);
+		MenuItem itemLogout = menu.add(0, LOGOUT, Menu.NONE, R.string.logout);
+
+		// Assign icons
+		//itemInformation.setIcon(R.drawable.ic_menu_info_details);
+		//itemPreferences.setIcon(R.drawable.ic_menu_preferences);
+		itemLogout.setIcon(R.drawable.ic_menu_logout);
+
+		// Allocate shortcuts to each of them.
+		//itemInformation.setShortcut('0', 'a');
+		//itemPreferences.setShortcut('1', 'r');
+		itemLogout.setShortcut('2', 'r');
+
+		return true;
 	}
 
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Handle item selection
+		switch (item.getItemId()) {
+		case INFORMATION:
+			return true;
+		case PREFERENCES:
+			Intent intent = new Intent(this, Preferences.class);
+			startActivity(intent);
+			return true;
+		case LOGOUT:
+			setResult(RESULT_OK);
+			finish();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
 }

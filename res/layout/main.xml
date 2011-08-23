@@ -1,69 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:orientation="vertical" android:scrollbars="vertical" android:layout_width="fill_parent"
-	android:layout_height="fill_parent" android:weightSum="1">
-	<TableLayout android:layout_width="fill_parent" android:id="@+id/tableLayout1"
-		android:layout_height="wrap_content">
-		<TableRow android:id="@+id/tableRow5" android:layout_width="wrap_content"
-			android:layout_height="wrap_content">
-			<LinearLayout android:layout_width="fill_parent"
-				android:layout_height="wrap_content" android:id="@+id/linearLayout2">
-				<ImageView android:layout_width="wrap_content" android:id="@+id/imageView1"
-					android:src="@drawable/icon" android:layout_height="wrap_content"></ImageView>
-				<TextView android:text="@string/hello"
-					android:textAppearance="?android:attr/textAppearanceLarge"
-					android:id="@+id/title" android:layout_gravity="bottom"
-					android:layout_height="wrap_content" android:layout_width="wrap_content"></TextView>
-			</LinearLayout>
-		</TableRow>
-	</TableLayout>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="fill_parent">
 
-	<LinearLayout android:id="@+id/linearLayout3"
-		android:layout_width="fill_parent" android:layout_height="wrap_content"
-		android:orientation="vertical">
-		<FrameLayout android:layout_width="fill_parent"
-			android:layout_height="wrap_content" android:id="@+id/frameLayout1">
-
-			<TextView android:text="@string/url" android:textAppearance="?android:attr/textAppearanceMedium"
-				android:id="@+id/textView3" android:layout_width="fill_parent"
-				android:layout_gravity="right" android:layout_height="39dp"></TextView>
-
-		</FrameLayout>
-	</LinearLayout>
-	<TextView android:id="@+id/textView2" android:layout_height="wrap_content"
-		android:layout_width="fill_parent" android:text="@string/phone"></TextView>
-	<LinearLayout android:layout_height="wrap_content"
-		android:layout_width="fill_parent" android:id="@+id/linearLayout5"
+	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+		android:orientation="vertical" android:scrollbars="vertical"
+		android:layout_width="fill_parent" android:layout_height="fill_parent"
 		android:weightSum="1">
-		<EditText android:layout_height="wrap_content" android:id="@+id/editPhone"
-			android:inputType="phone" android:layout_width="270dp">
-			<requestFocus></requestFocus>
-		</EditText>
-		<ImageButton android:src="@drawable/contact" android:layout_x="430px" android:layout_y="219px"
-			android:scaleType="center" android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/btnSelectContact"/>
-	</LinearLayout>
-	<TextView android:layout_height="wrap_content" android:text="@string/message"
-		android:layout_width="wrap_content" android:id="@+id/textView4"></TextView>
-	<EditText android:layout_height="wrap_content"
-		android:layout_width="fill_parent" android:inputType="textMultiLine"
-		android:maxLength="140" android:minLines="4" android:id="@+id/editMessage"
-		android:gravity="top"></EditText>
-	<LinearLayout android:layout_width="fill_parent"
-		android:layout_height="wrap_content" android:id="@+id/linearLayout4"
-		android:layout_gravity="right">
-		<Button android:id="@+id/btnSend" android:layout_height="wrap_content"
-			android:layout_width="120dp" android:layout_gravity="right"
-			android:text="@string/send"></Button>
-		<Button android:layout_gravity="right" android:layout_height="wrap_content"
-			android:layout_width="120dp" android:id="@+id/btnCancel"
-			android:text="@string/back"></Button>
-	</LinearLayout>
-	<android.widget.QuickContactBadge
-		android:id="@+id/quickContactBadge1" android:layout_width="wrap_content"
-		android:layout_height="wrap_content"></android.widget.QuickContactBadge>
-	<LinearLayout android:layout_width="fill_parent"
-		android:layout_height="wrap_content" android:id="@+id/linearLayout1"
-		android:orientation="vertical">
-	</LinearLayout>
+		<TableLayout android:layout_width="fill_parent"
+			android:id="@+id/tableLayout1" android:layout_height="wrap_content">
+			<TableRow android:id="@+id/tableRow5" android:layout_width="wrap_content"
+				android:layout_height="wrap_content">
+				<LinearLayout android:layout_width="fill_parent"
+					android:layout_height="wrap_content" android:id="@+id/linearLayout2">
+					<ImageView android:layout_width="wrap_content"
+						android:id="@+id/imageView1" android:src="@drawable/icon"
+						android:layout_height="wrap_content"></ImageView>
+					<TextView android:text="@string/hello"
+						android:textAppearance="?android:attr/textAppearanceLarge"
+						android:id="@+id/title" android:layout_gravity="bottom"
+						android:layout_height="wrap_content" android:layout_width="wrap_content"></TextView>
+				</LinearLayout>
+			</TableRow>
+		</TableLayout>
 
-</LinearLayout>
+		<LinearLayout android:id="@+id/linearLayout3"
+			android:layout_width="fill_parent" android:layout_height="wrap_content"
+			android:orientation="vertical">
+			<FrameLayout android:layout_width="fill_parent"
+				android:layout_height="wrap_content" android:id="@+id/frameLayout1">
+
+				<TextView android:text="@string/url"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:id="@+id/textView3" android:layout_width="fill_parent"
+					android:layout_gravity="right" android:layout_height="39dp"></TextView>
+
+			</FrameLayout>
+		</LinearLayout>
+		<TextView android:id="@+id/textView2" android:layout_height="wrap_content"
+			android:layout_width="fill_parent" android:text="@string/phone"></TextView>
+		<LinearLayout android:layout_height="wrap_content"
+			android:layout_width="fill_parent" android:id="@+id/linearLayout5"
+			android:weightSum="1">
+			<EditText android:layout_height="wrap_content" android:id="@+id/editPhone"
+				android:inputType="phone" android:hint="ddd + telefone" android:layout_width="260dp">
+				<requestFocus></requestFocus>
+			</EditText>
+			<ImageButton android:src="@drawable/contact"
+				android:scaleType="centerInside"
+				android:layout_width="48dp" android:layout_height="48dp" android:id="@+id/btnSelectContact" />
+		</LinearLayout>
+		<TextView android:layout_height="wrap_content" android:text="@string/message"
+			android:layout_width="wrap_content" android:id="@+id/textView4"></TextView>
+		<EditText android:layout_height="wrap_content"
+			android:layout_width="fill_parent" android:inputType="textMultiLine"
+			android:maxLength="140"  android:hint="mensagem" android:minLines="4" android:id="@+id/editMessage"
+			android:gravity="top"></EditText>
+		<LinearLayout android:layout_width="fill_parent"
+			android:layout_height="wrap_content" android:id="@+id/linearLayout4"
+			android:layout_gravity="right">
+			<Button android:id="@+id/btnSend" android:layout_height="wrap_content"
+				android:layout_width="120dp" android:layout_gravity="right"
+				android:text="@string/send"></Button>
+		</LinearLayout>
+		<android.widget.QuickContactBadge
+			android:id="@+id/quickContactBadge1" android:layout_width="wrap_content"
+			android:layout_height="wrap_content"></android.widget.QuickContactBadge>
+		<LinearLayout android:layout_width="fill_parent"
+			android:layout_height="wrap_content" android:id="@+id/linearLayout1"
+			android:orientation="vertical">
+		</LinearLayout>
+
+	</LinearLayout>
+</ScrollView>

@@ -16,4 +16,8 @@
     <string name="close">Sair</string>
     <string name="back">Voltar</string>
     <string name="blank"></string>
+    <string name="preferences">Configurações</string>
+    <string name="help">Ajuda</string>
+    <string name="information">Informações</string>
+    <string name="logout">Sair</string>
 </resources>
